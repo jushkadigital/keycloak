@@ -28,7 +28,7 @@ services:
     image: quay.io/phasetwo/phasetwo-keycloak:26.4.2
     container_name: keycloak-prod
     restart: unless-stopped
-    env-file:
+    env_file:
       - .env
     # Este comando usa Bash puro para intentar abrir una conexión al puerto 8080.
     # Si conecta, devuelve éxito (exit 0). Si falla, da error (exit 1).
