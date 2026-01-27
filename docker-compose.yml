@@ -3,7 +3,7 @@ version: '3.8'
 services:
   postgres:
     image: postgres:15
-    container_name: postgres-prod
+    container_name: postgres-keycloak
     restart: always
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
@@ -19,7 +19,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - prod-network
+      - keycloak-network
 
   # ----------------------------------------------------------------
   # 3. KEYCLOAK (PhaseTwo)
@@ -27,7 +27,7 @@ services:
   keycloak:
     image: quay.io/phasetwo/phasetwo-keycloak:26.4.2
     container_name: keycloak-prod
-    restart: unless-stopped
+    restart: always
     env_file:
       - .env
     # Este comando usa Bash puro para intentar abrir una conexión al puerto 8080.
@@ -46,7 +46,7 @@ services:
     command: -c "/opt/keycloak/bin/kc.sh build && exec /opt/keycloak/bin/kc.sh start --optimized --log-level=ERROR,FATAL"
 
     networks:
-      - prod-network
+      - keycloak-network
       - proxiable
 
     
@@ -57,5 +57,5 @@ networks:
   proxiable:
     external: true
     name: proxiable # Asegúrate de que este nombre coincida exactamente con tu red externa
-  prod-network:
+  keycloak-network:
     driver: bridge
