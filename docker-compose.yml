@@ -20,6 +20,10 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - keycloak-network
+    cpus: 1.0
+    mem_limit: 1024m
+    mem_reservation: 512m
+    pids_limit: 200
 
   # ----------------------------------------------------------------
   # 3. KEYCLOAK (PhaseTwo)
@@ -43,11 +47,15 @@ services:
     # Al quitar '--optimized', obligamos a Keycloak a leer las variables KC_..._ENABLED
     # y auto-configurarse al arrancar. Tardará unos segundos más en iniciar, pero funcionará.
     entrypoint: ["/bin/sh"]
-    command: -c "/opt/keycloak/bin/kc.sh build && exec /opt/keycloak/bin/kc.sh start --optimized --log-level=ERROR,FATAL"
+    command: -c "exec /opt/keycloak/bin/kc.sh start --optimized --log-level=ERROR,FATAL"
 
     networks:
       - keycloak-network
       - proxiable
+    cpus: 1.5
+    mem_limit: 1536m
+    mem_reservation: 768m
+    pids_limit: 400
 
     
 volumes:
