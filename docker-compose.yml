@@ -43,7 +43,7 @@ services:
     expose:
       - "8080"
     volumes:
-      - ./themes:/opt/keycloak/providers/
+      - ./themes:/opt/keycloak/themes/
         
     # 3. EL TRUCO DEL COMMAND
     # Al quitar '--optimized', obligamos a Keycloak a leer las variables KC_..._ENABLED
