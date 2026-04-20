@@ -31,7 +31,7 @@ services:
   keycloak:
     image: quay.io/phasetwo/phasetwo-keycloak:26.4.2
     container_name: keycloak-prod
-    restart: always
+    restart: unless-stopped
     env_file:
       - .env
     # Este comando usa Bash puro para intentar abrir una conexión al puerto 8080.
@@ -42,6 +42,8 @@ services:
         condition: service_healthy
     expose:
       - "8080"
+    volumes:
+      - ./themes:/opt/keycloak/providers/
         
     # 3. EL TRUCO DEL COMMAND
     # Al quitar '--optimized', obligamos a Keycloak a leer las variables KC_..._ENABLED
