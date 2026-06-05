@@ -40,6 +40,9 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+    networks:
+      - keycloak-network
+
     deploy:
       resources:
         limits:
@@ -51,7 +54,9 @@ services:
     pids_limit: 200
 
   keycloak:
-    image: quay.io/phasetwo/phasetwo-keycloak:26.4.2
+    build:
+      context: ./keycloak
+      dockerfile: Dockerfile
     container_name: keycloak-prod
     restart: unless-stopped
 
@@ -68,12 +73,17 @@ services:
       KC_DB_POOL_MAX_SIZE: 50
       KC_DB_POOL_INITIAL_SIZE: 10
 
+      KC_CACHE: local
+      KC_TRANSACTION_XA_ENABLED: "false"
+
       KC_LOG_LEVEL: ERROR
       KC_LOG_CONSOLE_FORMAT: "%d{yyyy-MM-dd HH:mm:ss,SSS} %-5p [%c] %s%e%n"
       KC_LOG_CONSOLE_OUTPUT: json
 
       QUARKUS_HTTP_LIMITS_MAX_CONNECTIONS: 500
       QUARKUS_HTTP_IDLE_TIMEOUT: 30S
+      QUARKUS_TRANSACTION_MANAGER_ENABLE_RECOVERY: "false"
+      QUARKUS_TRANSACTION_MANAGER_DEFAULT_TRANSACTION_TIMEOUT: 60
 
       JAVA_OPTS: >
         -XX:+UseContainerSupport
@@ -84,13 +94,15 @@ services:
         -XX:+UseStringDeduplication
         -XX:+AlwaysPreTouch
         -Djava.awt.headless=true
+        -Dkeycloak.quarkus.cluster.is-enabled=false
 
     depends_on:
       postgres:
         condition: service_healthy
 
-    ports:
-      - "8080:8080"
+    expose:
+      - "8080"
+      - "9000"
 
     volumes:
       - ./themes/keycloak-theme-for-kc-all-other-versions.jar:/opt/keycloak/providers/keycloak-theme-for-kc-all-other-versions.jar:ro
@@ -109,6 +121,10 @@ services:
       retries: 3
       start_period: 60s
 
+    networks:
+      - keycloak-network
+      - proxiable
+
     deploy:
       resources:
         limits:
@@ -122,3 +138,11 @@ services:
 volumes:
   postgres_data:
     driver: local
+
+networks:
+  proxiable:
+    external: true
+    name: proxiable
+
+  keycloak-network:
+    driver: bridge
