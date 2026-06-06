@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   postgres:
     image: postgres:16-alpine
@@ -48,10 +46,10 @@ services:
         limits:
           memory: 1024M
           cpus: '1.0'
+          pids: 200
         reservations:
           memory: 512M
           cpus: '0.5'
-    pids_limit: 200
 
   keycloak:
     build:
@@ -130,10 +128,10 @@ services:
         limits:
           memory: 1536M
           cpus: '1.5'
+          pids: 400
         reservations:
           memory: 1024M
           cpus: '1.0'
-    pids_limit: 400
 
 volumes:
   postgres_data:
