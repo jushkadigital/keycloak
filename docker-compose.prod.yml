@@ -62,9 +62,9 @@ services:
       - .env
 
     environment:
-      KC_PROXY_HEADERS: xforwarded
+      KC_PROXY: edge
       KC_HTTP_ENABLED: "true"
-      KC_HOSTNAME: https://auth.patarutera.pe
+      KC_HOSTNAME: auth.patarutera.pe
 
       KC_DB: postgres
       KC_DB_POOL_MIN_SIZE: 5
@@ -98,8 +98,6 @@ services:
     command:
       - start
       - --optimized
-      - --http-enabled=true
-      - --proxy-headers=xforwarded
 
     healthcheck:
       test: ["CMD-SHELL", "exec 3<>/dev/tcp/localhost/9000 && echo -e 'GET /health/ready HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n' >&3 && cat <&3 | grep -q '200 OK'"]

@@ -18,4 +18,6 @@ FROM quay.io/keycloak/keycloak:26.4.2
 
 COPY --from=builder /opt/keycloak/ /opt/keycloak/
 
+RUN sed -i '/^proxy=/d;/^hostname-strict-https=/d' /opt/keycloak/conf/keycloak.conf
+
 ENV KC_LOG_LEVEL=INFO
