@@ -18,4 +18,4 @@ FROM quay.io/keycloak/keycloak:26.4.2
 
 COPY --from=builder /opt/keycloak/ /opt/keycloak/
 
-ENV KC_LOG_LEVEL=WARN
+ENV KC_LOG_LEVEL=INFO
