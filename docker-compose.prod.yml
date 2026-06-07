@@ -64,8 +64,7 @@ services:
     environment:
       KC_PROXY_HEADERS: xforwarded
       KC_HTTP_ENABLED: "true"
-      KC_HOSTNAME: auth.patarutera.pe
-      KC_HOSTNAME_STRICT: "false"
+      KC_HOSTNAME: https://auth.patarutera.pe
 
       KC_DB: postgres
       KC_DB_POOL_MIN_SIZE: 5
@@ -101,7 +100,6 @@ services:
       - start
       - --optimized
       - --http-enabled=true
-      - --hostname-strict=false
       - --proxy-headers=xforwarded
 
     healthcheck:
